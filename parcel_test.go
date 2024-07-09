@@ -59,6 +59,8 @@ func TestAddGetDelete(t *testing.T) {
 	// проверьте, что посылку больше нельзя получить из БД
 	err = store.Delete(parcel.Number)
 	require.NoError(t, err)
+	_, err = store.Get(parcel.Number)
+	require.ErrorIs(t, err, sql.ErrNoRows)
 }
 
 // TestSetAddress проверяет обновление адреса
@@ -88,7 +90,7 @@ func TestSetAddress(t *testing.T) {
 	// получите добавленную посылку и убедитесь, что адрес обновился
 	selectedParcel, err := store.Get(parcel.Number)
 	require.NoError(t, err)
-	require.Equal(t, selectedParcel.Address, newAddress)
+	require.Equal(t, newAddress, selectedParcel.Address)
 }
 
 // TestSetStatus проверяет обновление статуса
